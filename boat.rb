@@ -1,8 +1,16 @@
 class Boat
   attr_reader :id
-  def initialize(id, name, capacity)
+  def initialize(id, capacity, name)
     @id = id
-    @name = name
     @capacity = capacity
+    @name = name
+  end
+
+  def to_hash
+    {
+      id: @id,
+      capacity: @capacity,
+      name: @name
+    }
   end
 end

@@ -7,6 +7,17 @@ class Timeslot
 
     @availability = 0
     @customer_count = 0
-    @boats = {}
+    @boats = []
+  end
+
+  def to_hash
+    {
+      id: @id,
+      start_time: @start_time,
+      duration: @duration,
+      availability: @availability,
+      customer_count: @customer_count,
+      boats: @boats
+    }
   end
 end
