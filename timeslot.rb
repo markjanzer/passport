@@ -1,13 +1,19 @@
+require 'date'
+
 class Timeslot
   attr_reader :id
   def initialize(id, start_time, duration)
     @id = id
-    @start_time = start_time
+    @start_time = start_time.to_i
     @duration = duration.to_i
 
     @availability = 0
     @customer_count = 0
     @boats = []
+  end
+
+  def get_date_as_string
+    Time.at(@start_time).to_datetime.to_s
   end
 
   def to_hash
@@ -20,4 +26,5 @@ class Timeslot
       boats: @boats
     }
   end
+
 end
