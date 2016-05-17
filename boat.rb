@@ -2,7 +2,7 @@ class Boat
   attr_reader :id
   def initialize(id, capacity, name)
     @id = id
-    @capacity = capacity
+    @capacity = capacity.to_i
     @name = name
   end
 

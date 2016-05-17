@@ -1,7 +1,7 @@
 require 'sinatra'
 require 'json'
-require 'boat'
-require 'timeslot'
+require_relative 'boat'
+require_relative 'timeslot'
 
 
 class PiranhaViewServer
@@ -15,7 +15,7 @@ class PiranhaViewServer
   end
 
   def new_boat(capacity, name)
-    boat = Boat.new(@@new_boat_id, capactiy, name)
+    boat = Boat.new(@@new_boat_id, capacity, name)
     @boats[boat.id] = boat
     @@new_boat_id += 1
     return boat
