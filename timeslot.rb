@@ -13,7 +13,7 @@ class Timeslot
   end
 
   def get_date_as_string
-    Time.at(@start_time).to_datetime.to_s
+    Time.at(@start_time).to_datetime.strftime("%Y-%m-%d")
   end
 
   def to_hash

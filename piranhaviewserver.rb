@@ -27,4 +27,9 @@ class PiranhaViewServer
     @@new_timeslot_id += 1
     return timeslot
   end
+
+  def get_collection_as_hashes(collection)
+    array_of_hashes = collection.map { |item| item.to_hash }
+    array_of_hashes
+  end
 end
