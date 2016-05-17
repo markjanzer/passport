@@ -16,15 +16,15 @@ class PiranhaViewServer
 
   def new_boat(capacity, name)
     boat = Boat.new(@@new_boat_id, capacity, name)
-    @boats[boat.id] = boat
+    @boats << boat
     @@new_boat_id += 1
     return boat
   end
 
   def new_timeslot(start_time, duration)
     timeslot = Timeslot.new(@@new_timeslot_id, start_time, duration)
-    @timeslot[timeslot.id] = timeslot
+    @timeslots << timeslot
     @@new_timeslot_id += 1
-    return Timeslot
+    return timeslot
   end
 end

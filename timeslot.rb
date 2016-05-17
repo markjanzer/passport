@@ -3,7 +3,7 @@ class Timeslot
   def initialize(id, start_time, duration)
     @id = id
     @start_time = start_time
-    @duration = duration
+    @duration = duration.to_i
 
     @availability = 0
     @customer_count = 0
