@@ -2,7 +2,7 @@ require 'date'
 
 class Timeslot
   attr_reader :id
-  attr_accessor :boats, :customer_count
+  attr_accessor :boats, :customer_count, :availability, :customer_count
   def initialize(id, start_time, duration)
     @id = id
     @start_time = start_time.to_i
