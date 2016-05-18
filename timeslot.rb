@@ -2,13 +2,14 @@ require 'date'
 
 class Timeslot
   attr_reader :id, :beginning_date_time, :end_date_time
-  attr_accessor :boats, :customer_count, :availability, :customer_count
+  attr_accessor :boats, :customer_count, :availability, :customer_count, :availability_by_boat
   def initialize(id, start_time, duration)
     @id = id
     @start_time = start_time.to_i
     @duration = duration.to_i
 
     @availability = 0
+    @availability_by_boat = []
     @customer_count = 0
     @boats = []
 
@@ -20,11 +21,15 @@ class Timeslot
     Time.at(@start_time).to_datetime.strftime("%Y-%m-%d")
   end
 
+  def add_boat(boat)
+    @boats << boat
+    @availability_by_boat << boat.capacity
+    sort_availability_by_boat
+    update_availability
+  end
+
   def update_availability
-    total_space = @boats.reduce(0) do |availability, boat|
-      availability + boat.capacity
-    end
-    @availability = total_space - @customer_count
+    @availability = @availability_by_boat.reduce(0) { |sum, boat_capacity| sum + boat_capacity }
   end
 
   def boat_ids
@@ -41,6 +46,13 @@ class Timeslot
       customer_count: @customer_count,
       boats: boat_ids
     }
+  end
+
+  private
+
+  # Sort to optimize boat utility, have large groups in boats that fit their size
+  def sort_availability_by_boat
+    @availability_by_boat = @availability_by_boat.sort
   end
 
 end

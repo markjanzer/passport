@@ -45,15 +45,23 @@ class PiranhaViewServer
       # Not sure how I would raise an error
       return "false"
     else
-      timeslot.boats << boat
-      timeslot.update_availability
+      chosen_timeslot.add_boat(boat)
     end
   end
 
   def create_booking(timeslot_id, size)
     timeslot = @timeslots.select { |timeslot| timeslot.id.to_s == timeslot_id }[0]
-    timeslot.customer_count += size.to_i
-    timeslot.update_availability
+    # Find index of smallest capacity that can hold the group.
+    index_of_capacity = timeslot.availability_by_boat.find_index { |capacity| capacity >= size.to_i }
+    if index_of_capacity
+      # Add booking and subtract capacity
+      timeslot.availability_by_boat[index_of_capacity] = timeslot.availability_by_boat[index_of_capacity] - size.to_i
+      timeslot.sort_availability_by_boat
+      timeslot.update_availability
+      timeslot.customer_count += size.to_i
+    else
+      return "false"
+    end
   end
 
   private
