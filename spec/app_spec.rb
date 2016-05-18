@@ -76,18 +76,34 @@ describe 'PiranhaViewServer' do
     it 'increases availability by the space on the boat' do
       expect(@timeslot.availability).to eq @boat.capacity
     end
+
+    it 'does not allow you to book the same boat twice' do
+      @pvs.assign_boat_to_timeslot("1", "1")
+      expect(@timeslot.availability).to eq 4
+    end
   end
 
   describe 'bookings' do
     before :all do
       @timeslot = @pvs.new_timeslot("1406052000", "120")
       @boat = @pvs.new_boat("4", "Atlantic Roamer")
+      @boat2 = @pvs.new_boat("6", "Pacific PuddleStomper")
       @pvs.assign_boat_to_timeslot("2", "2")
+      @pvs.assign_boat_to_timeslot("2", "3")
       @pvs.create_booking("2", "1")
     end
 
     it 'reduces the timeslots capactity by one' do
-      expect(@timeslot.availability).to eq 3
+      expect(@timeslot.availability).to eq 9
+    end
+
+    it 'reduces capacity of the boat with the least room first' do
+      expect(@timeslot.availability_by_boat[0]).to eq 3
+    end
+
+    it 'does not allow groups to be split between boats' do
+      @pvs.create_booking("2", "8")
+      expect(@timeslot.availability_by_boat[0]).to eq 3
     end
   end
 

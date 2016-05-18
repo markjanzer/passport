@@ -12,10 +12,6 @@ before do
   puts "*" * 40
 end
 
-get '/' do
-  p "Server is running"
-end
-
 post '/api/timeslots' do
   p params
   timeslot = pvs.new_timeslot(params[:timeslot][:start_time], params[:timeslot][:duration])
