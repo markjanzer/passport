@@ -1,7 +1,7 @@
 require 'date'
 
 class Timeslot
-  attr_reader :id
+  attr_reader :id, :beginning_date_time, :end_date_time
   attr_accessor :boats, :customer_count, :availability, :customer_count
   def initialize(id, start_time, duration)
     @id = id
@@ -11,6 +11,9 @@ class Timeslot
     @availability = 0
     @customer_count = 0
     @boats = []
+
+    @beginning_time = Time.at(@start_time)
+    @end_time = Time.at(@start_time) + 60*@duration
   end
 
   def get_date_as_string
