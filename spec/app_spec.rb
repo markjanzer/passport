@@ -1,5 +1,5 @@
 require 'spec_helper'
-require_relative '../app'
+require_relative '../app/models/piranhaviewserver'
 
 # describe "API" do
 #   describe 'POST timeslots' do

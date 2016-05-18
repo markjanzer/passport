@@ -5,7 +5,7 @@ require_relative 'timeslot'
 
 
 class PiranhaViewServer
-  attr_accessor :timeslots, :boats
+  attr_reader :boats, :timeslots
 
   def initialize
     @boats = []
