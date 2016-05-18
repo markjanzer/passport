@@ -1,4 +1,4 @@
-require_relative 'piranhaviewserver'
+require_relative '../models/piranhaviewserver'
 
 pvs = PiranhaViewServer.new
 
@@ -24,25 +24,19 @@ post '/api/timeslots' do
 end
 
 get '/api/timeslots' do
-  if pvs.timeslots.empty?
-    return [].to_json
-  else
-    p pvs.timeslots[0].get_date_as_string == params[:date]
-    timeslots_of_date = pvs.timeslots.select do |timeslot|
-      timeslot.get_date_as_string == params[:date]
-    end
-    p timeslots_of_date
-    timeslots_as_hashes = pvs.get_collection_as_hashes(timeslots_of_date)
-    p timeslots_as_hashes.to_json
-    return timeslots_as_hashes.to_json
+  p params
+  timeslots_of_date = pvs.timeslots.select do |timeslot|
+    timeslot.get_date_as_string == params[:date]
   end
+  timeslots_as_hashes = pvs.get_collection_as_hashes(timeslots_of_date)
+  p timeslots_as_hashes.to_json
+  return timeslots_as_hashes.to_json
 end
 
 post '/api/boats' do
   p params
   boat = pvs.new_boat(params[:boat][:capacity], params[:boat][:name])
   p boat.to_hash.to_json
-  p pvs.boats
   return boat.to_hash.to_json
 end
 
