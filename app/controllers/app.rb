@@ -45,11 +45,15 @@ end
 post '/api/assignments' do
   p params
   pvs.assign_boat_to_timeslot(params[:assignment][:timeslot_id], params[:assignment][:boat_id])
+  # Add to refresh the page and update the availability
+  redirect '/api/timeslots'
 end
 
 post '/api/bookings' do
   p params
   pvs.create_booking(params[:booking][:timeslot_id], params[:booking][:size])
+  # Add to refresh the page and update the availability
+  redirect '/api/timeslots'
 end
 
 

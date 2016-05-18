@@ -64,6 +64,8 @@ class PiranhaViewServer
 
   def create_booking(timeslot_id, size)
     timeslot = @timeslots.select { |timeslot| timeslot.id.to_s == timeslot_id }[0]
+    # Return false if timeslot does not exist
+    return "false" if !timeslot
     # Find index of smallest capacity that can hold the group.
     index_of_capacity = timeslot.availability_by_boat.find_index { |capacity| capacity >= size.to_i }
     if index_of_capacity
