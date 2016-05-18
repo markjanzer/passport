@@ -38,7 +38,7 @@ class PiranhaViewServer
     end
 
     # Compare each of these timeslots to see if they have any overlapping time
-    overlap = timeslots_that_have_boat.any do |timeslot|
+    overlap = timeslots_that_have_boat.any? do |timeslot|
       check_timeslots_for_overlap(chosen_timeslot, timeslot)
     end
     if overlap
