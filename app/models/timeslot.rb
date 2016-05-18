@@ -1,7 +1,8 @@
 require 'date'
 
 class Timeslot
-  attr_reader :id, :beginning_time, :end_time
+  # added extra readers for RSpec
+  attr_reader :id, :beginning_time, :end_time, :customer_count, :start_time
   attr_accessor :boats, :customer_count, :availability, :customer_count, :availability_by_boat
   def initialize(id, start_time, duration)
     @id = id

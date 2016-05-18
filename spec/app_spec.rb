@@ -90,7 +90,6 @@ describe 'PiranhaViewServer' do
       @pvs.assign_boat_to_timeslot(@timeslot1.id.to_s, @boat1.id.to_s)
       expect(@timeslot2.availability).to eq 0
     end
-
   end
 
   describe 'bookings' do
@@ -99,8 +98,6 @@ describe 'PiranhaViewServer' do
       @boat2 = @pvs.new_boat("6", "Boaty McBoatface")
       # 10:00 AM to 12:00 PM
       @timeslot1 = @pvs.new_timeslot("1463763600", "120")
-      # 11:00 AM to 1:00 PM
-      @timeslot2 = @pvs.new_timeslot("1463767200", "120")
       @pvs.assign_boat_to_timeslot(@timeslot1.id.to_s, @boat1.id.to_s)
       @pvs.assign_boat_to_timeslot(@timeslot1.id.to_s, @boat2.id.to_s)
       @pvs.create_booking(@timeslot1.id.to_s, "1")
@@ -115,11 +112,86 @@ describe 'PiranhaViewServer' do
     end
 
     it 'does not allow groups to be split between boats' do
-      @pvs.create_booking("2", "8")
+      @pvs.create_booking(@timeslot1.id.to_s, "8")
       expect(@timeslot1.availability_by_boat[0]).to eq 3
     end
-
   end
 
+  describe "Case 1" do
+    before :all do
+      @timeslot1 = @pvs.new_timeslot("1406052000", "120")
+      @boat1 = @pvs.new_boat("8", "Amazon Express")
+      @boat2 = @pvs.new_boat("4", "Amazon Express Mini")
+      @pvs.assign_boat_to_timeslot(@timeslot1.id.to_s, @boat1.id.to_s)
+      @pvs.assign_boat_to_timeslot(@timeslot1.id.to_s, @boat2.id.to_s)
+    end
+
+    describe 'timeslot1' do
+      it 'has correct start_time' do
+        expect(@timeslot1.start_time).to eq 1406052000
+      end
+
+      it 'has correct duration' do
+        expect(@timeslot1.duration).to eq 120
+      end
+
+      it 'has correct availability' do
+        expect(@timeslot1.availability).to eq 8
+      end
+
+      it 'has correct customer_count' do
+        expect(@timeslot1.customer_count).to eq 0
+      end
+
+      it 'has correct boat count' do
+        expect(@timeslot1.boats.length).to eq 2
+      end
+
+      it 'reduces availability when largest boat is taken' do
+        @pvs.assign_boat_to_timeslot(@timeslot1.id.to_s, "6")
+        expect(@timeslot1.availability).to eq 4
+      end
+    end
+  end
+
+  describe "Case 2" do
+    before :all do
+      @timeslot1 = @pvs.new_timeslot("1406052000", "120")
+      @timeslot2 = @pvs.new_timeslot("1406055600", "120")
+      @boat1 = @pvs.new_boat("8", "Amazon Express")
+      @pvs.assign_boat_to_timeslot(@timeslot1.id.to_s, @boat1.id.to_s)
+      @pvs.assign_boat_to_timeslot(@timeslot2.id.to_s, @boat1.id.to_s)
+    end
+
+    describe 'timeslot1' do
+      it 'has correct availability' do
+        expect(@timeslot1.availability).to eq 8
+      end
+
+      it 'has the correct boat' do
+        expect(@timeslot1.boats[0]).to eq @boat1.id.to_s
+      end
+    end
+
+    describe 'timeslot2' do
+      it 'has correct availability' do
+        expect(@timeslot2.availability).to eq 8
+      end
+
+      it 'has the correct boat' do
+        expect(@timeslot2.boats[0]).to eq @boat1.id.to_s
+      end
+    end
+
+    it 'changes availability after a booking is made' do
+      @pvs.create_booking(@timeslot2.id.to_s, "2")
+      it 'removes availability from first timeslot' do
+        expect(@timeslot1.availability).to eq 0
+      end
+      it 'changes availability in second timeslot' do
+        expect(@timeslot2.availability).to eq 6
+      end
+    end
+  end
 end
 
