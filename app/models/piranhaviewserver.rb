@@ -45,17 +45,12 @@ class PiranhaViewServer
       this_boat = timeslot.boats.select { |boat| boat.id.to_s == boat_id}
       this_boat.length > 0
     end
-    p "THIS IS timeslots_with_same_date_and_boat"
-    p timeslots_with_same_date_and_boat
-
     # Compare each of these timeslots to see if they have any overlapping time
     overlap = timeslots_with_same_date_and_boat.any? do |timeslot|
       check_timeslots_for_overlap(chosen_timeslot, timeslot)
     end
-    p "OVERLAP"
-    p overlap
     if overlap
-      # Not sure how I would raise an error
+      # Would raise error here
       return "false"
     else
       chosen_timeslot.add_boat(boat)
@@ -75,6 +70,7 @@ class PiranhaViewServer
       timeslot.update_availability
       timeslot.customer_count += size.to_i
     else
+      # Would raise error here
       return "false"
     end
   end
@@ -85,8 +81,8 @@ class PiranhaViewServer
   end
 
   private
-  # Not sure where I should put this method
 
+  # Not sure where I should put this method
   def check_timeslots_for_overlap(timeslot1, timeslot2)
     chosen_time_does_not_end_soon_enough = ((timeslot1.beginning_time > timeslot2.beginning_time) && (timeslot1.end_time > timeslot2.beginning_time))
     they_begin_at_the_same_time = (timeslot1.beginning_time == timeslot2.beginning_time)

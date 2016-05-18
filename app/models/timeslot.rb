@@ -9,6 +9,7 @@ class Timeslot
     @duration = duration.to_i
 
     @availability = 0
+    # I store availability by boat separately to ensure that the max party size is capped by the maximum capacity of a boat rather than the current availability
     @availability_by_boat = []
     @customer_count = 0
     @boats = []
