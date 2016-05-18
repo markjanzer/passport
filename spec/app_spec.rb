@@ -85,25 +85,28 @@ describe 'PiranhaViewServer' do
 
   describe 'bookings' do
     before :all do
-      @timeslot = @pvs.new_timeslot("1406052000", "120")
-      @boat = @pvs.new_boat("4", "Atlantic Roamer")
-      @boat2 = @pvs.new_boat("6", "Pacific PuddleStomper")
+      @boat = @pvs.new_boat("4", "Amazon Express")
+      @boat2 = @pvs.new_boat("6", "Boaty McBoatface")
+      # 10:00 AM to 12:00 PM
+      @timeslot1 = @pvs.new_timeslot("1463763600", "120")
+      # 11:00 AM to 1:00 PM
+      @timeslot2 = @pvs.new_timeslot("1463767200", "120")
       @pvs.assign_boat_to_timeslot("2", "2")
       @pvs.assign_boat_to_timeslot("2", "3")
       @pvs.create_booking("2", "1")
     end
 
     it 'reduces the timeslots capactity by one' do
-      expect(@timeslot.availability).to eq 9
+      expect(@timeslot1.availability).to eq 9
     end
 
     it 'reduces capacity of the boat with the least room first' do
-      expect(@timeslot.availability_by_boat[0]).to eq 3
+      expect(@timeslot1.availability_by_boat[0]).to eq 3
     end
 
     it 'does not allow groups to be split between boats' do
       @pvs.create_booking("2", "8")
-      expect(@timeslot.availability_by_boat[0]).to eq 3
+      expect(@timeslot1.availability_by_boat[0]).to eq 3
     end
   end
 

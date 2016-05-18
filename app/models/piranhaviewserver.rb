@@ -28,19 +28,32 @@ class PiranhaViewServer
     return timeslot
   end
 
+  def get_timeslots_by_date(date)
+    timeslots_of_date = @timeslots.select do |timeslot|
+      timeslot.get_date_as_string == date
+    end
+    timeslots_of_date
+  end
+
   def assign_boat_to_timeslot(timeslot_id, boat_id)
     chosen_timeslot = @timeslots.select { |timeslot| timeslot.id.to_s == timeslot_id }[0]
     boat = @boats.select { |boat| boat.id.to_s == boat_id }[0]
-    # Get all of the timeslots that have the boat
-    timeslots_that_have_boat = @timeslots.select do |timeslot|
+    # Get all timeslots of that date
+    timeslots_of_same_date = get_timeslots_by_date(chosen_timeslot.get_date_as_string)
+    # Get all timeslots of that date with that boat
+    timeslots_with_same_date_and_boat = timeslots_of_same_date.select do |timeslot|
       this_boat = timeslot.boats.select { |boat| boat.id.to_s == boat_id}
       this_boat.length > 0
     end
+    p "THIS IS timeslots_with_same_date_and_boat"
+    p timeslots_with_same_date_and_boat
 
     # Compare each of these timeslots to see if they have any overlapping time
-    overlap = timeslots_that_have_boat.any? do |timeslot|
+    overlap = timeslots_with_same_date_and_boat.any? do |timeslot|
       check_timeslots_for_overlap(chosen_timeslot, timeslot)
     end
+    p "OVERLAP"
+    p overlap
     if overlap
       # Not sure how I would raise an error
       return "false"
@@ -64,12 +77,13 @@ class PiranhaViewServer
     end
   end
 
-  private
-  # Not sure where I should put this method
   def get_collection_as_hashes(collection)
     array_of_hashes = collection.map { |item| item.to_hash }
     array_of_hashes
   end
+
+  private
+  # Not sure where I should put this method
 
   def check_timeslots_for_overlap(timeslot1, timeslot2)
     chosen_time_does_not_end_soon_enough = ((timeslot1.beginning_time > timeslot2.beginning_time) && (timeslot1.end_time > timeslot2.beginning_time))
