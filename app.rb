@@ -17,7 +17,6 @@ get '/' do
 end
 
 post '/api/timeslots' do
-  p "POST TIMESLOTS"
   p params
   timeslot = pvs.new_timeslot(params[:timeslot][:start_time], params[:timeslot][:duration])
   p timeslot.to_hash.to_json
@@ -25,7 +24,6 @@ post '/api/timeslots' do
 end
 
 get '/api/timeslots' do
-  p "GET TIMESLOTS"
   if pvs.timeslots.empty?
     return [].to_json
   else
@@ -41,7 +39,6 @@ get '/api/timeslots' do
 end
 
 post '/api/boats' do
-  p "POST BOATS"
   p params
   boat = pvs.new_boat(params[:boat][:capacity], params[:boat][:name])
   p boat.to_hash.to_json
@@ -50,11 +47,22 @@ post '/api/boats' do
 end
 
 get '/api/boats' do
-  p "GET BOATS"
   p params
   p pvs.get_collection_as_hashes(pvs.boats).to_json
   return pvs.get_collection_as_hashes(pvs.boats).to_json
 end
+
+post '/api/assignments' do
+  p params
+  pvs.assign_boat_to_timeslot(params[:assignment][:timeslot_id], params[:assignment][:boat_id])
+end
+
+post '/api/bookings' do
+  p params
+  pvs.create_booking(params[:booking][:timeslot_id], params[:booking][:size])
+end
+
+
 
 
 
