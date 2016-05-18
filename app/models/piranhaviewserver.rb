@@ -49,6 +49,8 @@ class PiranhaViewServer
     overlap = timeslots_with_same_date_and_boat.any? do |timeslot|
       check_timeslots_for_overlap(chosen_timeslot, timeslot)
     end
+    p "OVERLAP"
+    p overlap
     if overlap
       # Would raise error here
       return "false"
@@ -83,7 +85,7 @@ class PiranhaViewServer
 
   # Not sure where I should put this method
   def check_timeslots_for_overlap(timeslot1, timeslot2)
-    chosen_time_does_not_end_soon_enough = ((timeslot1.beginning_time > timeslot2.beginning_time) && (timeslot1.end_time > timeslot2.beginning_time))
+    chosen_time_does_not_end_soon_enough = ((timeslot1.beginning_time < timeslot2.beginning_time) && (timeslot1.end_time > timeslot2.beginning_time))
     they_begin_at_the_same_time = (timeslot1.beginning_time == timeslot2.beginning_time)
     they_end_at_the_same_time = (timeslot1.end_time == timeslot2.end_time)
     chosen_time_does_not_begin_late_enough = ((timeslot1.beginning_time > timeslot2.beginning_time) && (timeslot1.beginning_time < timeslot2.end_time))
