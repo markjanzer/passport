@@ -62,13 +62,12 @@ class PiranhaViewServer
     # Return false if timeslot does not exist
     return "false" if !timeslot
     # Find index of smallest capacity that can hold the group.
-    index_of_capacity = timeslot.availability_by_boat.find_index { |capacity| capacity >= size.to_i }
-    if index_of_capacity
+    ideal_boat = timeslot.boats.find { |boat| boat.availability >= size.to_i }
+    if ideal_boat
       # Add booking and subtract capacity
-      timeslot.availability_by_boat[index_of_capacity] = timeslot.availability_by_boat[index_of_capacity] - size.to_i
-      timeslot.sort_availability_by_boat
-      timeslot.update_availability
+      ideal_boat.availability -= size.to_i
       timeslot.customer_count += size.to_i
+      timeslot.update_availability
     else
       # Would raise error here
       return "false"
